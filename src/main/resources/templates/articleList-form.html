@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home for production application</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}">
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form th:object="${articleList}" action="#" th:action="@{/articleList/save}" method="post">
+
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <p>Please Correct Errors Below</p>
+                </div>
+
+                <input type="hidden" th:field="*{articleListId}"/>
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Edit Article list Information</h1>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 form-group" th:class="${#fields.hasErrors('model')}
+                                ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
+                                    <label>Model:</label>
+                                    <input type="text" class="form-control" th:field="*{model}"
+                                           th:errorclass="has-error"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('model')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('model')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                                <div class="col-md-3 form-group" th:class="${#fields.hasErrors('numberOfSeats')}
+                                ? 'col-md-3 form-group has-error' : 'col-md-3 form-group'">
+                                    <label>Number of seats:</label>
+                                    <input type="text" class="form-control" th:field="*{numberOfSeats}"
+                                           th:errorclass="has-error"/>
+                                    <span class="help-block" th:if="${#fields.hasErrors('numberOfSeats')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('numberOfSeats')}" th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Backside:</label>
+                                    <select class="form-control" th:field="*{backside}">
+                                        <option th:value="${articleList.backside}"></option>
+                                        <option th:each="backsideValue : ${T(com.sda.productionproject.model.Backside).values()}"
+                                                th:value="${backsideValue.name()}"
+                                                th:text="${backsideValue.name()}"
+                                        >val
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Confort:</label>
+                                    <select class="form-control" th:field="*{confort}">
+                                        <option th:value="${articleList.confort}"></option>
+                                        <option th:each="confortValue : ${T(com.sda.productionproject.model.Confort).values()}"
+                                                th:value="${confortValue.name()}"
+                                                th:text="${confortValue.name()}"
+                                        >val
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Relax:</label>
+                                    <select class="form-control" th:field="*{relax}">
+                                        <option th:value="${articleList.relax}"></option>
+                                        <option th:each="relaxValue : ${T(com.sda.productionproject.model.Relax).values()}"
+                                                th:value="${relaxValue.name()}"
+                                                th:text="${relaxValue.name()}"
+                                        >val
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Leg:</label>
+                                    <select class="form-control" th:field="*{leg}">
+                                        <option th:value="${articleList.leg}"></option>
+                                        <option th:each="legValue : ${T(com.sda.productionproject.model.Leg).values()}"
+                                                th:value="${legValue.name()}"
+                                                th:text="${legValue.name()}"
+                                        >val
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Materials</div>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Material name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:field="*{materials}" th:each="material : ${articleList.materials}">
+                                        <td>
+                                            <select class="form-control" th:field="${savedMaterials}">
+                                                <option th:value="${material.key.name}"
+                                                        th:text="${material.key.name}"></option>
+                                                <option th:each="materialName : ${savedMaterials}"
+                                                        th:value="${materialName}"
+                                                        th:text="${materialName}">
+                                                    >val
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" th:value="${material.value}" th:name="${material.value}"/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

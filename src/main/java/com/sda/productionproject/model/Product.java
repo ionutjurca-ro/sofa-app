@@ -1,20 +1,24 @@
 package com.sda.productionproject.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-@Entity(name = "ArticleList")
-@Table(name = "articleList")
+@Entity(name = "Product")
+@Table(name = "product")
 @Getter
 @Setter
-public class ArticleList {
+@EqualsAndHashCode
+public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "article_list_id")
-    private Long articleListId;
+    @Column(name = "product_id")
+    private Long productId;
 
     private String model;
 
@@ -33,17 +37,15 @@ public class ArticleList {
     @Enumerated
     private Leg leg;
 
-    @Column(name = "material_type")
-    @Enumerated
-    private MaterialType materialType;
-
     @ElementCollection
-    @CollectionTable(name="articleList_materials", joinColumns=@JoinColumn(name="articleListId"))
+    @CollectionTable(name="product_materials", joinColumns=@JoinColumn(name="productId"))
     @Column(name="quantity")
     @MapKeyJoinColumn(name="materialId", referencedColumnName="materialId")
     private Map<Material, Double> materials = new HashMap<>();
 
-    public ArticleList() {
+    public Product() {
+        super();
     }
+
 
 }
